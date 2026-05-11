@@ -2,9 +2,9 @@ import streamlit as st
 import pandas as pd
 import io
 
-st.set_page_config(page_title="Smart Grader V7.1 - Original Plus Bonus", layout="wide")
+st.set_page_config(page_title="Smart Grader V7.1", layout="wide")
 
-st.title("📊 Smart Grader V7.1 (Nilai Asli + Bonus Manual)")
+st.title("📊 Smart Grader V7.1")
 st.markdown("""
 Pada versi ini, siswa yang melampaui batas **Ceiling** akan mendapatkan nilai: 
 **Nilai Asli + Bonus** (Tanpa mengikuti rumus katrol).
