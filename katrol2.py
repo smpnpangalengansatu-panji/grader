@@ -2,18 +2,15 @@ import streamlit as st
 import pandas as pd
 import io
 
-st.set_page_config(page_title="Smart Grader V6 - Smart Protection", layout="wide")
+st.set_page_config(page_title="Smart Grader V7 - Bonus Feature", layout="wide")
 
-st.title("📊 Smart Grader V6.0 (Perlindungan Nilai Tinggi)")
-st.markdown("""
-Aplikasi ini memastikan siswa yang nilainya sudah tinggi **tidak akan turun**. 
-Siswa yang melampaui Target Maksimal akan dipertahankan nilai aslinya.
-""")
+st.title("📊 Smart Grader V7.0 (Fitur Bonus Nilai Atas)")
+st.markdown("Fitur ini memungkinkan guru memberikan apresiasi lebih bagi siswa yang nilainya melampaui Batas Ceiling.")
 st.divider()
 
 # --- SIDEBAR: DOWNLOAD TEMPLATE ---
 st.sidebar.header("Langkah 1: Persiapan")
-df_template = pd.DataFrame({'Nama Siswa': ['Siswa A', 'Siswa B', 'Siswa C'], 'Nilai Asli': [97, 80, 30]})
+df_template = pd.DataFrame({'Nama Siswa': ['Siswa A', 'Siswa B', 'Siswa C'], 'Nilai Asli': [98, 80, 30]})
 buffer_template = io.BytesIO()
 with pd.ExcelWriter(buffer_template, engine='openpyxl') as writer:
     df_template.to_excel(writer, index=False)
@@ -30,22 +27,24 @@ if uploaded_file:
         temp_series = pd.to_numeric(df[kolom_nilai], errors='coerce').dropna()
         
         if not temp_series.empty:
-            # Rekomendasi
-            rerata = temp_series.mean()
+            rerata = int(temp_series.mean())
             rec_floor = int((temp_series.min() + rerata) / 2)
             rec_ceil = int(temp_series.quantile(0.90))
 
-            st.info(f"💡 Saran: Floor **{rec_floor}**, Ceiling **{rec_ceil}**")
+            st.info(f"💡 Statistik Kelas: Min **{temp_series.min()}**, Max **{temp_series.max()}**, Rerata **{rerata}**")
             
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2 = st.columns(2)
             with col1:
-                target_min = st.number_input("Target Nilai Min", value=75)
-            with col2:
+                target_min = st.number_input("Target Nilai Min (KKTP)", value=75)
                 target_max = st.number_input("Target Nilai Max", value=95)
-            with col3:
-                floor_val = st.number_input("Batas Floor", value=rec_floor)
-            with col4:
-                ceil_val = st.number_input("Batas Ceiling", value=rec_ceil)
+            with col2:
+                floor_val = st.number_input("Batas Floor (Lantai)", value=rec_floor)
+                ceil_val = st.number_input("Batas Ceiling (Langit)", value=rec_ceil)
+            
+            # FITUR BARU: Tambahan Nilai untuk Siswa di atas Ceiling
+            st.subheader("🌟 Apresiasi Khusus")
+            bonus_top = st.number_input("Tambahan Nilai untuk Siswa di atas Ceiling", value=2, 
+                                        help="Siswa yang nilai aslinya > Ceiling akan diberikan nilai (Target Max + Bonus ini).")
 
             if st.button("🚀 Proses Penyesuaian Nilai"):
                 df_clean = df.copy()
@@ -54,16 +53,15 @@ if uploaded_file:
                 def hitung_final(x):
                     if pd.isna(x): return x
                     
-                    # LOGIKA PERLINDUNGAN: Jika nilai sudah di atas Target Max, JANGAN DIUBAH
-                    if x >= target_max:
-                        return x
+                    # LOGIKA BARU: Jika nilai di atas atau sama dengan Ceiling
+                    if x >= ceil_val:
+                        # Nilai diberikan Target Max + Bonus manual
+                        # Kita batasi agar tidak lewat 100 kecuali Anda mengizinkannya
+                        return min(100, target_max + bonus_top)
                     
-                    # Proses Scaling untuk nilai lainnya
-                    # 1. Terapkan Floor & Ceiling pada input sementara
-                    x_calc = max(min(x, ceil_val), floor_val)
+                    # Proses Scaling untuk nilai di bawah ceiling
+                    x_calc = max(x, floor_val) # Terapkan Floor
                     
-                    # 2. Hitung skala
-                    # Kita gunakan ceil_val dan floor_val sebagai patokan min-max kalkulasi
                     if ceil_val == floor_val:
                         return float(target_min)
                     
@@ -72,14 +70,14 @@ if uploaded_file:
 
                 df_clean['Nilai_Baru'] = df_clean[kolom_nilai].apply(hitung_final)
                 
-                st.success("✅ Nilai diproses. Siswa dengan nilai sangat tinggi tetap dipertahankan!")
+                st.success(f"✅ Berhasil! Siswa istimewa (> {ceil_val}) mendapatkan nilai apresiasi {target_max + bonus_top}.")
                 st.dataframe(df_clean, use_container_width=True)
 
                 # DOWNLOAD
                 buffer_hasil = io.BytesIO()
                 with pd.ExcelWriter(buffer_hasil, engine='openpyxl') as writer:
                     df_clean.to_excel(writer, index=False)
-                st.download_button("💾 Download Hasil (.xlsx)", data=buffer_hasil.getvalue(), file_name="Hasil_Nilai_V6.xlsx")
+                st.download_button("💾 Download Hasil (.xlsx)", data=buffer_hasil.getvalue(), file_name="Hasil_Nilai_Bonus.xlsx")
                 
     except Exception as e:
         st.error(f"Terjadi kesalahan: {e}")
