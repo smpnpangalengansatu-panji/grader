@@ -31,7 +31,7 @@ with col_judul:
     st.subheader("Sistem Penyesuaian Angka Dan Analisis Nilai")
     st.markdown("*“Menyelaraskan capaian nilai peserta didik secara objektif, adil, dan merata.”*")
 
-st.caption("🔒 **Private & Secure:** Dashboard evaluasi internal sekolah. Semua data hanya diproses di memori lokal browser Anda.")
+st.caption("🔒 **Private & Secure:** Dashboard evaluasi internal sekolah. Semua data hanya diproses di memori lokal browser Anda. -- Created by : iman 2026 --")
 st.divider()
 
 # --- SIDEBAR (UNTUK DOWNLOAD TEMPLATE - TERSEMBUNYI NYAMAN) ---
