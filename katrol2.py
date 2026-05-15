@@ -4,7 +4,7 @@ import io
 import os
 
 # --- KONFIGURASI LOGO SEKOLAH ---
-FILE_LOGO = "logo.png" 
+FILE_LOGO = "logo.jpg" 
 URL_LOGO_DEFAULT = "https://cdn-icons-png.flaticon.com/512/5322/5322031.png" # Ikon Edukasi/Sekolah
 
 if os.path.exists(FILE_LOGO):
