@@ -14,7 +14,7 @@ else:
 
 # --- CONFIGURASI HALAMAN LURUS & LUAS ---
 st.set_page_config(
-    page_title="Aplikasi SIPADAN - Sistem Internal", 
+    page_title="Aplikasi SIPADAN - Panji", 
     page_icon=logo_sekolah,
     layout="wide", 
     initial_sidebar_state="collapsed" # Sidebar otomatis sembunyi agar halaman luas
