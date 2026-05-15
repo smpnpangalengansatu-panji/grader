@@ -5,10 +5,10 @@ import numpy as np
 
 st.set_page_config(page_title="Smart Grader V11 - Lebar Rentang", layout="wide")
 
-st.title("📊 Smart Grader SMP V11.0 (Kendali Lebar Rentang Data)")
+st.title("📊 Smart Grader SMP V11.0 - Panji")
 st.markdown("""
 Pada versi ini, Anda bisa menentukan **lebar interval (jarak nilai)** tiap kelompok hingga maksimal **30 poin data**.
-Sistem akan otomatis menyesuaikan jumlah kelompoknya.
+Sistem akan otomatis menyesuaikan jumlah kelompoknya. --- Created by : iman 2026 ----
 """)
 st.divider()
 
