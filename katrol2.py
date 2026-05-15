@@ -24,7 +24,7 @@ st.set_page_config(
 col_logo, col_judul = st.columns([1, 10])
 
 with col_logo:
-    st.image(logo_sekolah, width=95)
+    st.image(logo_sekolah, width=105)
 
 with col_judul:
     st.title("Aplikasi SIPADAN ")
